@@ -1,0 +1,47 @@
+Version 0.0.3 - 2011.
+1. Added menu with option to open an existing test plan, by its URL.
+
+
+Version 0.0.2 - 2011.05.01
+1. Handling of cases when the test is not found (URL returns 404).
+2. kert now processes the tests indicated by an index file mentioned as
+query string when called for kert.html.
+Example: http://127.0.0.1/utils/kert/kert.html?plan-url=path-to-test-plan-index-file
+
+Version 0.0.1 - 2011.04.25
+1. This version of kert allows running tests written in different languages and
+processed on different servers. The only requirement for test to be run by using
+kert is that test should output a HTML page, from which, based upon settings in the
+tests' configuration file (index.xml) and by using jQuery selectors, kert will extract
+ the result token and render it.
+2. With the next versions, kert will have the following features:
+a. will become a jQuery plugin (with XML configuration file);
+b. buttons for each test, in order to: run test separately, view source of
+test, view report for test, view log for test;
+c. buttons for run all tests or other categories of tests (failed, partial, undefined ones, etc.);
+d. various report for all tests;
+e. will render tests located in collections of tests with unlimited depth.
+f. will allow smart evaluation of tests, based upon REX (Remote Events for XML) for actions on the
+tested page, and Schematron (for varions assertions of patterns in test result page). Thus, kert
+can be used for testing also web applications. An example of evaluation follows:
+		<!--step for sending XML events to the test page-->
+            <rex xmlns="http://www.w3.org/ns/rex#">
+                <event target="id(&#34;shiny-donkey&#34;)" name="DOMNodeRemoved"/>
+                <event target="/x:html/x:body/x:table[2]" name="DOMNodeInserted" position="7">
+                    <tr xmlns="http://www.w3.org/1999/xhtml">
+                        <td>Rover</td>
+                        <td>Alpine Labrador</td>
+                        <td class="food">bone</td>
+                    </tr>
+                </event>
+                <event target="id(&#34;spot&#34;)" attrName="fetch" name="DOMAttrModified" newValue="ball"/>
+            </rex>
+		<!--step for assertion-->
+            <schema xmlns="http://purl.oclc.org/dsdl/schematron">
+                <pattern>
+                    <title>Date rules</title>
+                    <rule context="Contract">
+                        <assert test="ContractDate &lt; current-date()">ContractDate should be in the past because future contracts are not allowed.</assert>
+                    </rule>
+                </pattern>
+            </schema>
