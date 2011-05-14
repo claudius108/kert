@@ -1,0 +1,9 @@
+kert relies on jquery and Datatables.
+
+A. Installation of kert:
+1. Install jquery and set path in kert.html.
+2. Install Datatables (http://datatables.net) and set path in kert.html.
+3. Use packed index.xml as model for definition of tests.
+
+The package also includes proxy.php, needed for cross domain requests (this file is just as example;
+for more sophisticated proxy uses, set your own solution).
