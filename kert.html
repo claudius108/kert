@@ -2,42 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Kert - testing automaton</title>
-        <style type="text/css" title="currentStyle">
+        <style type="text/css">
 		<![CDATA[
-		fieldset { margin-bottom: 10px; }
-		fieldset legend div { margin: 0.3em 0.5em; }
-		fieldset .field { display: inline-block; width: 500px; margin: 0.5em; }
-		fieldset .field label { margin-right: 0.4em; }
-		#kert-menu {width: 100%; height: 50px;}
-		.failed {background-color: red;}
+		fieldset legend { margin: 0.3em 0.5em; }
+		div .field {font-family: tahoma, arial, helvetica; font-size: 10pt; display: inline-block; width: 500px;}
+		div .field label {margin-right: 0.4em;}
+		#test-plan-tree {width: 40%; margin-left: 15px;}
 		]]>
 	</style>
         <script type="text/javascript" charset="utf-8" src="../jquery/core/jquery.js">/**/</script>
-	<!--dependencies for datatable-->
-	<link rel="stylesheet" type="text/css" href="../jquery/DataTables/media/css/demo_table_jui.css"/>
-	<link rel="stylesheet" type="text/css" href="../jquery/DataTables/media/themes/smoothness/jquery-ui-1.8.12.custom.css"/>
-        <script type="text/javascript" charset="utf-8" src="../jquery/DataTables/media/js/jquery.dataTables.min.js">/**/</script>
-	<!--dependencies for dynatree-->
+	<!--dependencies for dynatree plugin-->
 	<link rel="stylesheet" type="text/css" href="../jquery/dynatree/skin/ui.dynatree.css"/>
 	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery-ui-1.8.12.custom.min.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/core/jquery.cookie.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/dynatree/jquery.dynatree.js">/**/</script>
-	<!--depedencies for superfish menu-->
+	<!--depedencies for superfish menu plugin-->
 	<link rel="stylesheet" type="text/css" href="../jquery/superfish/css/superfish.css"/>
 	<script type="text/javascript" charset="utf-8" src="../jquery/superfish/js/hoverIntent.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/superfish/js/superfish.js">/**/</script>
-	<!--dependencies for dialog-->
+	<!--dependencies for dialog plugin-->
 	<link rel="stylesheet" type="text/css" href="../jquery/ui/themes/base/jquery-ui.css"/>
 	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.core.min.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.position.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.widget.min.js">/**/</script>
 	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.dialog.js">/**/</script>
-	<!--dependencies for transform-->
-	<script type="text/javascript" charset="utf-8" src="../jquery/transform/jquery.transform.js">/**/</script>
+	<!--dependencies for kert plugin-->
         <script type="text/javascript" charset="utf-8" src="core/jquery.kert.js">/**/</script>
+	<!--dependencies for simpath plugin-->
+        <script type="text/javascript" charset="utf-8" src="../jquery/simpath/jquery.simpath.js">/**/</script>
 	</head>
     <body>
-	<div id="kert-menu">
+	<div style="width: 100%; height: 50px;">
 		<ul class="sf-menu">
 			<li class="current">
 				<a href="#a">Test plan</a>
@@ -58,52 +53,23 @@
 			</li>
 		</ul>
 	</div>
-	<div id="open-test-dialog" title="Open test plan"> 
-		<p>Enter test plan URL:</p>
-		<input type="text" id="plan-uri" class="text ui-widget-content ui-corner-all" size="60" value="http://89.33.60.139/tests/proxy.php?url=http://89.33.60.139:8080/web-apps/tests/x-crypt/index.xml"/>
+        <h2 id="plan-description"></h2>
+	<div class="ui-widget ui-widget-content">
+		<div id="test-plan-tree"></div>
 	</div>
-	<div id="dynatree-data" style="display: none;"></div>
-	<div id="test-plan-tree" >
-	    <ul id="data">
-		<li id="tree-1" title="Test 1">Generate enveloped digital signature</li>
-		<li id="tree-2" title="Test 2">Validate enveloped digital signature</li>	
-		<li id="tree-3" title="Test 3">Symmetric encryption of string</li>
-		<li id="tree-4" title="Test 4">Symmetric decryption of string</li>	
-		<li id="tree-5" title="Test 5">Error message for symmetric encryption of string</li>
-		<li id="tree-6" title="Test 6">'SHA-1' hashing, result encoded as 'hex'</li>	
-		<li id="tree-7" title="Test 7">'SHA-1' hashing, result encoded as 'base64'</li>
-		<li id="tree-8" title="Test 8">'SHA-1' hashing, default encoding of result</li>	
-		<li id="tree-9" title="Test 9">'MD5' hashing, result encoded as 'base64'</li>
-		<li id="tree-10" title="Test 10">'SHA-256' hashing, result encoded as 'base64'</li>	
-		<li id="tree-11" title="Test 11">'SHA-384' hashing, result encoded as 'base64'</li>
-		<li id="tree-12" title="Test 12">'SHA-512' hashing, result encoded as 'base64'</li>	
-		<li id="tree-13" title="Test 13">AWS REST request</li>	
-	    </ul>
-	</div>
-        <div id="units-details" style="display: none;"></div>
-        <h2 id="units-description"></h2>
-	<fieldset id="results-summary" class="ui-widget ui-widget-content">
-		<legend class="ui-widget-header ui-corner-all">
-			<div>Summary</div>
-		</legend>
-		<div class="field" id="all-tests">
+	<div id="results-summary" class="ui-widget ui-widget-content">
+		<div id="all-tests" class="field">
 			<label>Total no. of tests:</label>
 			<output>0</output>
 		</div>
 		<div id="custom-tests"></div>
-	</fieldset>
-        <table id="test-results" cellpadding="0" cellspacing="0" border="0" class="display">
-            <thead>
-                <tr>
-                    <th>Crt. No.</th>
-                    <th>Test description</th>
-                    <th>Test result</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody/>
-        </table>
+	</div>
+        <div id="units-details" style="display: none;"></div>
+	<div id="dynatree-data" style="display: none;"></div>
         <div id="iframes-host" style="display: none;"></div>
-	<div></div>	
+	<div id="open-test-dialog" title="Open test plan"> 
+		<p>Enter test plan URL:</p>
+		<input type="text" id="plan-uri" class="text ui-widget-content ui-corner-all" size="60" value="http://89.33.60.139/tests/proxy.php?url=http://89.33.60.139:8080/web-apps/tests/x-crypt/index.xml"/>
+	</div>
     </body>
 </html>
