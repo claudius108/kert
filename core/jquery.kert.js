@@ -1,11 +1,15 @@
 		 $(document).ready(function() {
-			$("#test-plan-tree").dynatree({title: "DynaTree root", rootVisible: true});
-			$("#test-plan-tree").dynatree("getTree").getNodeByKey("tree-1")
-				.span.children[1].style.backgroundImage = 'url(resources/images/passed.png)';
-			$("#test-plan-tree").dynatree("getTree").getNodeByKey("tree-2")
-				.span.children[1].style.backgroundImage = 'url(resources/images/failed.png)';
-			$("#test-plan-tree").dynatree("getTree").getNodeByKey("tree-3")
-				.span.children[1].style.backgroundImage = 'url(resources/images/warning.png)';
+			//node-set
+// 			alert($(document).simpath("//results").find("result").attr("icon-url"));
+			//boolean value
+// 			alert($(document).simpath("//result/@class = 'passed'"));
+			//numeric value
+// 			alert($(document).simpath("//result[7]/@no div 2"));
+			//single node
+// 			alert($(document).simpath("//result[7]").attr("id"));
+			//attribute
+// 			alert($(document).simpath("//result[@id = 'passed']/@icon-url"));
+
 
 			var $dialog = $("#open-test-dialog")
 				.dialog({
@@ -26,63 +30,46 @@
 				return false;
 			});
 			$("ul.sf-menu").superfish();
-			oTable = $("#test-results").dataTable({
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"sPaginationType": "full_numbers",
-				"aoColumns": [
-					{ "bSearchable": false, "sWidth": "10px" },
-					null,
-					{ "sWidth": "170px" },
-					{ "bSortable": false, "bSearchable": false, "sWidth": "100px" },
-				]
-			});
 		 } );
 		function openPlan(planURI) {
 			$.get(planURI, function(xml) {
 				//clear test plan
 				$("#units-details").empty();
-				$("#units-details").append($(xml.documentElement).clone());
-				$("#dynatree-data").append($("#units-details collections").clone());
-				//$("#test-plan-tree").append($("#units-details #data").clone());//.dynatree();
-
-				//alert($("#test-plan-tree").html());
-				
-// 				$("#dynatree-data").transform({
-// 					success: function () {
-// 						$("#test-plan-tree").html($("#dynatree-data").html()).dynatree();
-// 						$("#dynatree-data").remove();
-// 					},
-// 					xmlstr: $("#dynatree-data").html().replace(/" id="/g, ""),
-// 					xsl: "test-plan2json.xsl"
-// 				});
-				$("#units-description").text($("#units-details description:first").text());
-				var resultTokens = $("#units-details result").map(function() {return $(this).attr("id");}).get().join(' ');
-				//clear tests views
-				oTable.fnClearTable();
+				//clear tree data
+				$("#dynatree-data").empty();
 				//clear results' summary
 				$("#custom-tests").empty();
+				//load test plan
+				$("#units-details").append($(xml.documentElement).clone());
+				//render the collections of tests
+				$("#dynatree-data").append($("#units-details test-tree > ul").clone());
+				if ($("#test-plan-tree > ul").hasClass('dynatree-container')) {
+					$("#test-plan-tree").html($("#dynatree-data").html());
+					$("#test-plan-tree").dynatree("getTree").reload();
+				} else {
+					$("#test-plan-tree").html($("#dynatree-data").html());
+					$("#test-plan-tree").dynatree();
+				}
+
+				$("#plan-description").text($("#units-details description:first").text());
+				var resultTokens = $("#units-details result").map(function() {return $(this).attr("id");}).get().join(' ');
 				//render results' summary
 				$("#all-tests output").text($("#units-details test").length);
 				$("#units-details results > result").each(function(index) {
 					$("<div class=\"field\" id=\"" + $(this).attr("id") + "-tests\"><label>" + $(this).text() + " tests:</label><output>0</output></div>").appendTo("#custom-tests");
 				});
-				//render the collections of tests
-				$("#units-details test").each(function(index) {
-					oTable.fnAddData( [index + 1, $(this).children("description").text(), "Testing ...", ""] );
-				});
+
 				//run tests
 				$("#units-details test").each(function(index) {
-					var tr = oTable.fnGetNodes(index);
-					$(tr).css('background-color', 'orange').css('font-weight', 'bold')
-						.css('color', 'white')
-						.children("td:eq(2)").css('text-align', 'center');
 					//$("<div/>", {"id" : "unit-div-" + index}).appendTo("body").load($(this).children("test-url").text(), function(){$("#b1").click();}).error(function(){alert('error');});
 					$.ajax({url: $(this).children("test-url").text(), testId: $(this).attr("id")})
 						.error(function() {
-							oTable.fnUpdate( "Test not found", index, 2 );
-							$(tr).css({"background-color": "white", "color": "black"});
-							//update status of test
+							
+							//oTable.fnUpdate( "Test not found", index, 2 );
+							//$(tr).css({"background-color": "white", "color": "black"});
+							//update status of test in tree view
+
+							//update status of test in test plan
 							$("#units-details test-url:contains('" + this.url + "')").siblings("run-status").text('unfound').attr("timestamp", new Date().toUTCString());
 							//update summary
 							$("#unfound-tests > output").text(Number($("#results-summary #unfound > output").text()) + 1);
@@ -98,15 +85,14 @@
 									if (resultTokens.indexOf(resultId) == -1) {
 										resultId = "undefined";
 									}
-									var resultDescription = $("#" + resultId);
+									var resultDescription = $(document).simpath("//*[local-name() = 'result'][@id = '" + resultId + "']");
 									//update status of test in tree view
-									oTable.fnUpdate( resultDescription.text(), index, 2 );
-									$(tr).css({"background-color": resultDescription.attr("background-color"), "color": resultDescription.attr("font-color")});
+// 									$(tr).css({"background-color": resultDescription.attr("background-color"), "color": resultDescription.attr("font-color")});
 									var iconURL = resultDescription.attr("icon-url"),
-										backgroundImageName = iconURL ? iconURL : 'resources/images/warning.png';
+										backgroundImageURL = iconURL ? iconURL : 'resources/images/warning.png';
 									$("#test-plan-tree").dynatree("getTree").getNodeByKey("tree-" + $(this).attr("id").substring(12))
-										.span.children[1].style.backgroundImage = 'url(' + backgroundImageName + ')';
-									//update status of test
+										.span.children[1].style.backgroundImage = 'url(' + backgroundImageURL + ')';
+									//update status of test in test plan
 									$("#units-details test-url:contains('" + this.src + "')").siblings("run-status").text(resultId).attr("timestamp", new Date().toUTCString());
 									//update summary
 									$("#" + resultId + "-tests > output").text(Number($("#" + resultId + "-tests > output").text()) + 1);
