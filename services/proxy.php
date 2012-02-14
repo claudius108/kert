@@ -17,6 +17,13 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 // Make the call
 $response = curl_exec($ch);
 
+/* Check for 404 (file not found). */
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if($httpCode == 404) {
+    //$response = "";
+}
+
+
 echo $response;
 
 curl_close($ch);

@@ -11,7 +11,7 @@ Example: http://127.0.0.1/utils/kert/kert.html?plan-url=path-to-test-plan-index-
 Version 0.0.1 - 2011.04.25
 1. This version of kert allows running tests written in different languages and
 processed on different servers. The only requirement for test to be run by using
-kert is that test should output a HTML page, from which, based upon settings in the
+kert is that test should output a HTML or XML resource, from which, based upon settings in the
 tests' configuration file (index.xml) and by using jQuery selectors, kert will extract
  the result token and render it.
 2. With the next versions, kert will have the following features:

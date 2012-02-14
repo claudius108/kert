@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kert:test xmlns:kert="http://kuberam.ro/ns/kert" id="13">
+    <kert:author/>
+    <kert:title/>
+    <kert:version/>
+    <kert:description/>
+    <kert:test-url/>
+    <kert:source-url/>
+    <kert:assertion/>
+    <kert:timeout/>
+    <kert:run-status timestamp=""/>
+    <kert:development-status timestamp=""/>
+    <kert:log/>
+    <kert:loops-number/>
+    <kert:total-test-time/>
+    <kert:type>interactive | unattended</kert:type>
+    <kert:assertion-type>assert-xml | assert-HTML-UI</kert:assertion-type>
+</kert:test>
