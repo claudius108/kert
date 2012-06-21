@@ -12,7 +12,7 @@ return
 					href="{$url}"
 					method="get"
 					username="admin"
-					password=""
+					password="admin123"
 					auth-method="basic"/>
 			)
 		}

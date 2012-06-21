@@ -1,80 +1,121 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:kert="http://kuberam.ro/ns/kert" xmlns:html5="http://www.w3.org/1999/xhtml5">
     <head>
         <title>Kert - testing automaton</title>
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"/>
         <style type="text/css">
-		<![CDATA[
-		fieldset legend { margin: 0.3em 0.5em; }
-		div .field {font-family: tahoma, arial, helvetica; font-size: 10pt; display: inline-block; width: 500px;}
-		div .field label {margin-right: 0.4em;}
-		#test-plan-tree {width: 40%; margin-left: 15px;}
-		]]>
-	</style>
-        <script type="text/javascript" charset="utf-8" src="../jquery/core/jquery.js">/**/</script>
+            div.field {font-family: tahoma, arial, helvetica; font-size: 10pt; display: inline-block; width: 500px;}
+            div.field label {margin-right: 0.4em;}
+            #test-description-container {height: 300px;}
+            #test-plan-tree {float: left; height: 265px; width: 30%; margin-left: 15px;}
+            #test-plan-tree .dynatree-container {height: 100%;}
+            #test-plan-details {float: right; margin: 13px 10px 20px 20px; height: 265px; width: 65%; font-family: tahoma, arial, helvetica; font-size: 10pt;}
+		#test-plan-details pre {width: 90%; height: 205px; overflow: auto;}
+		</style>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/core/jquery.min.js">/**/</script>
 	<!--dependencies for dynatree plugin-->
-	<link rel="stylesheet" type="text/css" href="../jquery/dynatree/skin/ui.dynatree.css"/>
-	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery-ui-1.8.12.custom.min.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/core/jquery.cookie.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/dynatree/jquery.dynatree.js">/**/</script>
+        <link rel="stylesheet" type="text/css" href="../../jquery/dynatree/skin/ui.dynatree.css"/>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery-ui-1.8.12.custom.min.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/core/jquery.cookie.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/dynatree/jquery.dynatree.js">/**/</script>
 	<!--depedencies for superfish menu plugin-->
-	<link rel="stylesheet" type="text/css" href="../jquery/superfish/css/superfish.css"/>
-	<script type="text/javascript" charset="utf-8" src="../jquery/superfish/js/hoverIntent.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/superfish/js/superfish.js">/**/</script>
+        <link rel="stylesheet" type="text/css" href="../../jquery/superfish/css/superfish.css"/>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/superfish/js/hoverIntent.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/superfish/js/superfish.js">/**/</script>
 	<!--dependencies for dialog plugin-->
-	<link rel="stylesheet" type="text/css" href="../jquery/ui/themes/base/jquery-ui.css"/>
-	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.core.min.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.position.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.widget.min.js">/**/</script>
-	<script type="text/javascript" charset="utf-8" src="../jquery/ui/jquery.ui.dialog.js">/**/</script>
+        <link rel="stylesheet" type="text/css" href="../../jquery/ui/themes/base/jquery-ui.css"/>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery.ui.core.min.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery.ui.position.min.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery.ui.widget.min.js">/**/</script>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery.ui.dialog.min.js">/**/</script>
+    <!--dependencies for tabs plugin-->
+        <link rel="stylesheet" type="text/css" href="../../jquery/ui/themes/base/jquery.ui.tabs.css"/>
+        <script type="text/javascript" charset="utf-8" src="../../jquery/ui/jquery.ui.tabs.min.js">/**/</script>    
+	<!--dependencies for simpath module-->
+        <script type="text/javascript" charset="utf-8" src="../../simpath/core/simpath.js">/**/</script>
 	<!--dependencies for kert plugin-->
-        <script type="text/javascript" charset="utf-8" src="core/jquery.kert.js">/**/</script>
-	<!--dependencies for simpath plugin-->
-        <script type="text/javascript" charset="utf-8" src="../jquery/simpath/jquery.simpath.js">/**/</script>
-	</head>
+        <script type="text/javascript" charset="utf-8" src="kert.js">/**/</script>
+    </head>
     <body>
-	<div style="width: 100%; height: 50px;">
-		<ul class="sf-menu">
-			<li class="current">
-				<a href="#a">Test plan</a>
-				<ul>
-					<li>
-						<a href="#">New</a>
-					</li>
-					<li>
-						<a id="open-test" href="#">Open</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">Configure</a>
-				<ul>
-					<li>
-						<a href="#">Theme roller</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">About</a>
-			</li>
-		</ul>
-	</div>
-        <h2 id="plan-description"></h2>
-	<div class="ui-widget ui-widget-content">
-		<div id="test-plan-tree"></div>
-	</div>
-	<div id="results-summary" class="ui-widget ui-widget-content">
-		<div id="all-tests" class="field">
-			<label>Total no. of tests:</label>
-			<output>0</output>
-		</div>
-		<div id="custom-tests"></div>
-	</div>
-        <div id="units-details" style="display: none;"></div>
-	<div id="dynatree-data" style="display: none;"></div>
-        <div id="iframes-host" style="display: none;"></div>
-	<div id="open-test-dialog" title="Open test plan"> 
-		<p>Enter test plan URL:</p>
-		<input type="text" id="plan-uri" class="text ui-widget-content ui-corner-all" size="60" value="http://89.33.60.139/tests/proxy.php?url=http://89.33.60.139:8080/web-apps/tests/x-crypt/index.xml"/>
-	</div>
+        <div style="width: 100%; height: 50px;">
+            <ul class="sf-menu">
+                <li class="current">
+                    <a href="#a">Test plan</a>
+                    <ul>
+                        <li>
+                            <a href="#">New</a>
+                        </li>
+                        <li>
+                            <a id="open-test" href="#">Open</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Configure</a>
+                    <ul>
+                        <li>
+                            <a href="#">Theme roller</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+            </ul>
+        </div>
+        <h4 id="plan-description"/>
+        <div id="test-description-container" class="ui-widget ui-widget-content">
+            <div id="test-plan-tree"/>
+            <div id="test-plan-details" class="ui-widget ui-widget-content">
+                <ul>
+                    <li>
+                        <a href="#generalities-tab">General</a>
+                    </li>
+                    <li>
+                        <a href="#result-tab">Result</a>
+                    </li>
+                    <li>
+                        <a href="#assertion-tab">Assertion</a>
+                    </li>
+                    <li>
+                        <a href="#source-tab">Source</a>
+                    </li>
+                    <li>
+                        <a href="#error-tab">Error</a>
+                    </li>
+                </ul>
+                <div id="generalities-tab">
+                    <label for="test-author">Author: </label>
+                    <html5:output id="test-author"/>
+                    <br/>
+                    <label for="test-description">Description: </label>
+                    <html5:output id="test-description"/>
+                </div>
+                <div id="result-tab">
+                    <pre id="test-result"/>
+                </div>
+                <div id="assertion-tab">
+                    <pre id="test-assertion"/>
+                </div>
+                <div id="source-tab">
+                    <pre id="test-source"/>
+                </div>
+                <div id="error-tab">
+                    <pre id="test-error-message"/>
+                </div>
+            </div>
+        </div>
+        <div id="results-summary" class="ui-widget ui-widget-content">
+            <div id="all-tests" class="field">
+                <label>Total no. of tests:</label>
+                <html5:output id="all-tests-output">0</html5:output>
+            </div>
+            <div id="custom-tests"/>
+        </div>
+        <div id="iframes-host" style="display: inline;"/>
+        <div id="open-test-dialog" title="Open test plan">
+            <p>Enter test plan URL:</p>
+            <input type="text" id="plan-uri" class="text ui-widget-content ui-corner-all" size="60" value=""/>
+        </div>
     </body>
 </html>

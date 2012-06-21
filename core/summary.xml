@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:kyer="http://kuberam.ro/ns/kyer" exclude-result-prefixes="kyer" version="1.0">
+    <xsl:output method="html"/>
+    <xsl:template match="/">
+        <html>
+            <xsl:copy-of select="@*"/>
+            <xsl:attribute name="id">context-items-for-<xsl:value-of select="@id"/>
+            </xsl:attribute>
+            <xsl:attribute name="class">contextMenu</xsl:attribute>
+            <xsl:apply-templates/>
+        </html>
+    </xsl:template>
+    <xsl:template match="kyer:optionset">
+        <xsl:apply-templates/>
+    </xsl:template>
+    <xsl:template match="kyer:option">
+        <xsl:element name="li">
+            <xsl:copy-of select="@*"/>
+            <xsl:element name="a">
+                <xsl:copy-of select="@*"/>
+                <xsl:attribute name="href">#<xsl:value-of select="@id"/>
+                </xsl:attribute>
+                <xsl:attribute name="onclick">
+                    <xsl:value-of select="@command"/>
+                </xsl:attribute>
+                <xsl:choose>
+                    <xsl:when test="*[local-name() = 'label']/*">
+                        <xsl:copy-of select="*[local-name() = 'label']/*"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="*[local-name() = 'label']/text()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:element>
+        </xsl:element>
+    </xsl:template>
+</xsl:stylesheet>
