@@ -2,7 +2,7 @@
 <!-- kert, web test runner By Claudius Teodorescu Licensed under LGPL. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:kert="http://kuberam.ro/ns/kert"
   version="1.0">
-  <xsl:output method="xhtml" />
+  <xsl:output method="xml" />
   <xsl:template match="/">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
