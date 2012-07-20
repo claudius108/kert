@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- kert, web test runner By Claudius Teodorescu Licensed under LGPL. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:kert="http://kuberam.ro/ns/kert"
-  version="1.0">
+  xmlns="http://www.w3.org/1999/xhtml" version="1.0">
   <xsl:output method="xml" />
   <xsl:template match="/">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <style>
           body {
           font-family: 'Verdana', sans-serif;
@@ -51,15 +52,25 @@
     <xsl:variable name="testId" select="substring-after(./@id, 'tree-')" />
     <xsl:variable name="testDetails" select="//kert:test[@id = $testId]" />
     <div class="test-summary">
-      <div class="test-summary-title">
-        <xsl:value-of select="$testDetails//kert:title" />
-        <span class="test-summary-operations">
-          <a href="{normalize-space($testDetails//kert:test-url)}">Run test</a>
-        </span>
-      </div>
-      <div class="test-summary-description">
-        <xsl:value-of select="$testDetails//kert:description" />
-      </div>
+      <xsl:choose>
+        <xsl:when test="contains(./@class, 'folder')">
+          <div class="test-summary-title">
+            <xsl:value-of select="." />
+          </div>
+        </xsl:when>
+        <xsl:otherwise>
+          <div class="test-summary-title">
+            <xsl:value-of select="$testDetails//kert:title" />
+            <span class="test-summary-operations">
+              <a href="{normalize-space($testDetails//kert:test-url)}">Run test</a>
+            </span>
+          </div>
+          <div class="test-summary-description">
+            <xsl:value-of select="$testDetails//kert:description" />
+          </div>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates />
     </div>
   </xsl:template>
   <xsl:template match="text()" />
