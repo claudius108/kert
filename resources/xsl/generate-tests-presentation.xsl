@@ -2,6 +2,7 @@
 <!-- kert, web test runner By Claudius Teodorescu Licensed under LGPL. -->
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:kert="http://kuberam.ro/ns/kert" version="1.0">
     <xsl:output method="xml"/>
+    <xsl:variable name="testPlanBaseUri" select="/kert:test-plan/@xml:base"/>
     <xsl:template match="/">
         <html>
             <head>
@@ -59,9 +60,15 @@
 					.test-status-passed {
 					color: green;
 					}
+					.test-status-passed:after {
+					content: " passed";
+					} 
 					.test-status-failed {
 					color: red;
 					}
+					.test-status-failed:after {
+					content: " failed";
+					}					
 				</style>
             </head>
             <body>
@@ -78,8 +85,7 @@
     <xsl:template match="//*[local-name() = 'li']">
         <xsl:variable name="testId" select="substring-after(./@id, 'tree-')"/>
         <xsl:variable name="unitTest" select="//kert:test[@id = $testId]"/>
-        <xsl:variable name="unitTestStatus" select="$unitTest//kert:run-status/text()"/>
-        <div class="test-summary">
+        <div id="{$unitTest/@id}" class="test-summary">
             <div class="logo">
                 <img src="../icon.png" width="24" height="24"/>
             </div>
@@ -93,13 +99,11 @@
                     <xsl:otherwise>
                         <div class="test-summary-title">
                             <xsl:value-of select="$unitTest//kert:title"/>
-							(status:
-							<span class="test-status-{$unitTestStatus}">
-                                <xsl:value-of select="$unitTestStatus"/>
-                            </span>
-							)
-							<span class="test-summary-operations">
-                                <a href="{normalize-space($unitTest//kert:test-url)}">Run test</a>
+                            <xsl:text> (status:</xsl:text>
+                            <span class="test-status-"/>
+                            <xsl:text>)</xsl:text>
+                            <span class="test-summary-operations">
+                                <a href="{concat($testPlanBaseUri, $unitTest//kert:test-url)}">Run test</a>
                             </span>
                         </div>
                         <div class="test-summary-description">
