@@ -25,6 +25,7 @@
 					}
 					.test-summary {
 					float: left;
+					min-height: 50px;
 					width: 98%;
 					margin-bottom:
 					15px;
@@ -32,7 +33,6 @@
 					.logo
 					{
 					width: 3%;
-					height: 100%;
 					float: left;
 					margin-top: 10px;
 					text-align: center;
@@ -40,8 +40,7 @@
 					.test-summary-content {
 					float: left;
 					width:
-					94%;
-					height: 100%;
+					94%;					
 					}
 					.test-description {
 					float: left;
@@ -86,7 +85,7 @@
 			</body>
 		</html>
 	</xsl:template>
-	<xsl:template match="//kert:test">
+	<xsl:template match="kert:test">
 		<xsl:variable name="testId" select="./@id" />
 		<div id="{$testId}" class="test-summary">
 			<div class="logo">
@@ -99,7 +98,7 @@
 					<span class="test-status-" />
 					<xsl:text>)</xsl:text>
 					<span class="test-summary-operations">
-						<a href="{concat($testPlanBaseUri, kert:test-url)}">Run test</a>
+						<a href="{concat($testPlanBaseUri, normalize-space(kert:test-url))}">Run test</a>
 					</span>
 				</div>
 				<div class="test-summary-description">
