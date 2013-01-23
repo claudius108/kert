@@ -90,7 +90,7 @@
 		<xsl:variable name="testId" select="./@id" />
 		<div id="{$testId}" class="test-summary">
 			<div class="logo">
-				<img src="../icon.png" width="24" height="24" />
+				<img src="../icon.png" width="24" height="24" alt="*" />
 			</div>
 			<div class="test-summary-content">
 				<div class="test-summary-title">
