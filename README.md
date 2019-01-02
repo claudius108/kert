@@ -7,7 +7,7 @@ Usage
 Call kert as follows:
 Press Test plan / Open menu items, add URL of test plan in dialog box, and press Open button.
 
-xml```
+```xml
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>xml-maven-plugin</artifactId>
